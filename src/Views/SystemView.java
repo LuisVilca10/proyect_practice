@@ -4,25 +4,30 @@
  */
 package Views;
 
+import Controllers.EmployeesController;
 import Controllers.SettingsController;
+import Models.*;
 
 /**
  *
  * @author Luis
  */
 public class SystemView extends javax.swing.JFrame {
-
+    Employees em = new Employees();
+    EmployeesDao emdao = new EmployeesDao();
     /**
      * Creates new form SystemView
      */
     public SystemView() {
         initComponents();
         setSize(1208,680);
-        setResizable(false);
+        setResizable(true);
         setTitle("Panel de Administrador");
         setLocationRelativeTo( null);
         SettingsController setting = new SettingsController(this);
         this.repaint();
+        EmployeesController em_Account = new EmployeesController(em, emdao, this);
+        em_Account.listAllEmployees();
     }
 
     /**
@@ -425,6 +430,11 @@ public class SystemView extends javax.swing.JFrame {
 
         btn_logout.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         btn_logout.setText("Salir");
+        btn_logout.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_logoutActionPerformed(evt);
+            }
+        });
         jPanel3.add(btn_logout, new org.netbeans.lib.awtextra.AbsoluteConstraints(890, 35, -1, 30));
 
         getContentPane().add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 0, 1010, 100));
@@ -701,18 +711,15 @@ public class SystemView extends javax.swing.JFrame {
                     .addComponent(jLabel14)
                     .addComponent(txt_purchase_price, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btn_add_product_to_buy, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(30, 30, 30)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addGap(30, 30, 30)
-                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel11)
-                            .addComponent(txt_purchase_product_name, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addGap(30, 30, 30)
-                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel15)
-                            .addComponent(txt_purchase_subtotal, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btn_confirm_purchase, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel11)
+                        .addComponent(txt_purchase_product_name, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel15)
+                        .addComponent(txt_purchase_subtotal, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btn_confirm_purchase, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(30, 30, 30)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel12)
@@ -907,7 +914,7 @@ public class SystemView extends javax.swing.JFrame {
         jPanel11.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel23.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jLabel23.setText("ID:");
+        jLabel23.setText("DNI:");
 
         jLabel25.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel25.setText("Nombre:");
@@ -1036,7 +1043,7 @@ public class SystemView extends javax.swing.JFrame {
 
             },
             new String [] {
-                "ID", "Nombre", "Nombre de Usuario", "Direccion", "Telefono", "Correo", "Rol"
+                "DNI", "Nombre", "Nombre de Usuario", "Direccion", "Telefono", "Correo", "Rol"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -1500,6 +1507,14 @@ public class SystemView extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txt_search_categoryActionPerformed
 
+    private void btn_logoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_logoutActionPerformed
+        if (evt.getSource() == btn_logout) {
+            dispose();
+            LoginView login = new LoginView();
+            login.setVisible(true);
+        }
+    }//GEN-LAST:event_btn_logoutActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -1539,13 +1554,13 @@ public class SystemView extends javax.swing.JFrame {
     public javax.swing.JButton btn_add_product_to_buy;
     public javax.swing.JButton btn_cancel_customer;
     public javax.swing.JButton btn_cancel_employee;
-    private javax.swing.JButton btn_cancel_product;
+    public javax.swing.JButton btn_cancel_product;
     public javax.swing.JButton btn_cancel_supplier;
     public javax.swing.JButton btn_confirm_purchase;
     public javax.swing.JButton btn_delete_category;
     public javax.swing.JButton btn_delete_customer;
     public javax.swing.JButton btn_delete_employee;
-    private javax.swing.JButton btn_delete_product;
+    public javax.swing.JButton btn_delete_product;
     public javax.swing.JButton btn_delete_supplier;
     private javax.swing.JButton btn_logout;
     public javax.swing.JButton btn_modify_data;
@@ -1554,16 +1569,16 @@ public class SystemView extends javax.swing.JFrame {
     public javax.swing.JButton btn_register_category;
     public javax.swing.JButton btn_register_customer;
     public javax.swing.JButton btn_register_employee;
-    private javax.swing.JButton btn_register_product;
+    public javax.swing.JButton btn_register_product;
     public javax.swing.JButton btn_register_supplier;
     public javax.swing.JButton btn_remove_purchase;
     public javax.swing.JButton btn_update_category;
     public javax.swing.JButton btn_update_customer;
     public javax.swing.JButton btn_update_employee;
-    private javax.swing.JButton btn_update_product;
+    public javax.swing.JButton btn_update_product;
     public javax.swing.JButton btn_update_supplier;
     public javax.swing.JTable categories_table;
-    private javax.swing.JComboBox<Object> cmb_product_category;
+    public javax.swing.JComboBox<Object> cmb_product_category;
     public javax.swing.JComboBox<String> cmb_purchase_supplier;
     public javax.swing.JComboBox<String> cmb_rol;
     public javax.swing.JComboBox<String> cmb_supplier_city;
@@ -1664,7 +1679,7 @@ public class SystemView extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane7;
     private javax.swing.JTabbedPane jTabbedPane1;
     public javax.swing.JTextField jTextField1;
-    private javax.swing.JTable products_table;
+    public javax.swing.JTable products_table;
     public javax.swing.JTable purchases_table;
     public javax.swing.JTable suppliers_table;
     public javax.swing.JTable table_all_purchases;
@@ -1689,11 +1704,11 @@ public class SystemView extends javax.swing.JFrame {
     public javax.swing.JPasswordField txt_password_modifly;
     public javax.swing.JPasswordField txt_password_modilfy_confirm;
     public javax.swing.JTextField txt_phone_profile;
-    private javax.swing.JTextField txt_product_code;
-    private javax.swing.JTextField txt_product_description;
-    private javax.swing.JTextField txt_product_id;
-    private javax.swing.JTextField txt_product_name;
-    private javax.swing.JTextField txt_product_unit_price;
+    public javax.swing.JTextField txt_product_code;
+    public javax.swing.JTextField txt_product_description;
+    public javax.swing.JTextField txt_product_id;
+    public javax.swing.JTextField txt_product_name;
+    public javax.swing.JTextField txt_product_unit_price;
     public javax.swing.JTextField txt_purchase_amount;
     public javax.swing.JTextField txt_purchase_id;
     public javax.swing.JTextField txt_purchase_price;
@@ -1704,7 +1719,7 @@ public class SystemView extends javax.swing.JFrame {
     public javax.swing.JTextField txt_search_category;
     public javax.swing.JTextField txt_search_customer;
     public javax.swing.JTextField txt_search_employee;
-    private javax.swing.JTextField txt_search_product;
+    public javax.swing.JTextField txt_search_product;
     public javax.swing.JTextField txt_supplier_address;
     public javax.swing.JTextField txt_supplier_description;
     public javax.swing.JTextField txt_supplier_email;

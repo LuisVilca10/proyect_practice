@@ -4,17 +4,24 @@
  */
 package Views;
 
+import Controllers.LoginController;
+import Models.*;
+
 /**
  *
  * @author Luis
  */
 public class LoginView extends javax.swing.JFrame {
 
+    Employees employee = new Employees();
+    EmployeesDao employees_dao = new EmployeesDao();
     /**
      * Creates new form LoginView
      */
     public LoginView() {
         initComponents();
+        //controllador del login
+        LoginController e_login= new LoginController(employee, employees_dao, this);
         setSize(930,415);
         setResizable(false);
         setTitle("Ingresar al sistema");
