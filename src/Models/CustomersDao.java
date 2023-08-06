@@ -1,5 +1,6 @@
 package Models;
 
+import Views.SystemView;
 import java.sql.ResultSet;
 import java.sql.PreparedStatement;
 import java.sql.Connection;
@@ -18,12 +19,13 @@ public class CustomersDao {
 
     ConnectionMySQL cn = new ConnectionMySQL();
     Connection conn;
+     private SystemView views;
     PreparedStatement pst;
     ResultSet rs;
 
     public boolean registerCustomerQuery(Customers customer) {
 
-        String query = " INSERTO INTO customers (id, full_name, address, telephone, email, created, update )"
+        String query = " INSERT INTO customers (id, full_name, address, telephone, email, created, updated )"
                 + " VALUES (?,?,?,?,?,?,?) ";
         Timestamp datetime = new Timestamp(new Date().getTime());
         try {
@@ -40,15 +42,16 @@ public class CustomersDao {
             return true;
 
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "error al registrar cliente ");
+            System.err.println("el error : " + e.getMessage());
+            JOptionPane.showMessageDialog(views, "error al registrar cliente " + e.getMessage());
             return false;
         }
     }
 
     public List listCustomerQuery(String value) {
         List<Customers> list_customer = new ArrayList();
-        String query = "SELECT * FROM customers ORDER BY rol ASC";
-        String query_search_customer = "SELECT * FROM customers WHERE id LIKE '%" + value + "%'";
+        String query = "SELECT * FROM customers ORDER BY full_name ASC";
+        String query_search_customer = "SELECT * FROM customers WHERE full_name LIKE '%" + value + "%'";
 
         try {
             conn = cn.getConnection();
@@ -77,7 +80,7 @@ public class CustomersDao {
     }
 
     public boolean updateCustomerQuery(Customers customer) {
-        String query = "UPDATE customers SET full_name = ?,  address = ?, telephone = ?, email = ?, update = ?"
+        String query = "UPDATE customers SET full_name = ?,  address = ?, telephone = ?, email = ?, updated = ?"
                 + " WHERE id = ?";
 
         Timestamp datetime = new Timestamp(new Date().getTime());

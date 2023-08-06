@@ -1,6 +1,7 @@
 package Controllers;
 
 import Models.*;
+import static Models.EmployeesDao.id_user;
 import Views.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -28,6 +29,10 @@ public class EmployeesController implements ActionListener, MouseListener, KeyLi
         this.views.btn_update_employee.addActionListener(this);
         this.views.employees_table.addMouseListener(this);
         this.views.txt_search_employee.addKeyListener(this);
+        this.views.btn_delete_employee.addActionListener(this);
+        this.views.btn_cancel_employee.addActionListener(this);
+        this.views.btn_modify_data.addActionListener(this);
+        this.views.jPanelEmployoes.addMouseListener(this);
     }
 
     @Override
@@ -93,6 +98,47 @@ public class EmployeesController implements ActionListener, MouseListener, KeyLi
                     }
                 }
             }
+        } else if (e.getSource() == views.btn_delete_employee) {
+            int row = views.employees_table.getSelectedRow();
+            if (row == -1) {
+                JOptionPane.showMessageDialog(views, "Seleccionar un empleado que desea eliminar");
+            } else if (views.employees_table.getValueAt(row, 0).equals(id_user)) {
+                JOptionPane.showMessageDialog(views, "No puedo eliminar al usuario");
+            } else {
+                int id = Integer.parseInt(views.employees_table.getValueAt(row, 0).toString());
+                int question = JOptionPane.showConfirmDialog(views, "¿Estas seguro de elimar al empleado?");
+                if (question == 0 && emdao.deleteEmployeeQuery(id) != false) {
+                    cleanTable();
+                    cleanFields();
+                    views.btn_register_employee.setEnabled(true);
+                    listAllEmployees();
+                    JOptionPane.showMessageDialog(views, "El empleado a sido eliminado");
+                }
+            }
+        } else if (e.getSource() == views.btn_cancel_employee) {
+            cleanFields();
+            views.btn_register_employee.setEnabled(true);
+            views.txt_employee_password.setEnabled(true);
+            views.txt_employee_id.setEditable(true);
+        } else if (e.getSource() == views.btn_modify_data) {
+            //recuperar info de las cajas password
+            String password = String.valueOf(views.txt_password_modifly.getPassword());
+            String confirm_password = String.valueOf(views.txt_password_modilfy_confirm.getPassword());
+            //verificando las contraseñas iguales
+            if (!password.equals("") && !confirm_password.equals("")) {
+                if (password.equals(confirm_password)) {
+                    em.setPassword(String.valueOf(views.txt_password_modifly.getPassword()));
+                    if (emdao.updateEmployeePassword(em) != false) {
+                        JOptionPane.showMessageDialog(views, "Contraseña modificada");
+                    } else {
+                        JOptionPane.showMessageDialog(views, "Error al elimar la contraseña");
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(views, "Las contraseñas no coinciden");
+                }
+            } else {
+                 JOptionPane.showMessageDialog(views, "todos los campos son obligatorios");
+            }
         }
     }
 
@@ -132,6 +178,17 @@ public class EmployeesController implements ActionListener, MouseListener, KeyLi
             views.txt_employee_password.setEnabled(false);
             views.btn_register_employee.setEnabled(false);
 
+        } else if(e.getSource() == views.jPanelEmployoes){
+            if (rol.equals("Administrador")) {
+                views.jTabbedPane1.setSelectedIndex(3);
+                cleanTable();
+                cleanFields();
+                listAllEmployees();
+            } else {
+                views.jTabbedPane1.setEnabledAt(3, false);
+                views.jLabelEmployoes.setEnabled(false);
+                JOptionPane.showMessageDialog(views, "no tienes permisos");
+            }
         }
     }
 
@@ -171,18 +228,21 @@ public class EmployeesController implements ActionListener, MouseListener, KeyLi
             listAllEmployees();
         }
     }
+
     public void cleanFields() {
-       views.txt_employee_id.setText("");
-       views.txt_employee_id.setEditable(true);
-       views.txt_employee_fullname.setText("");
-       views.txt_employee_username.setText("");
-       views.txt_employee_address.setText("");
-       views.txt_employee_telephone.setText("");
-       views.txt_employee_email.setText("");
-       views.txt_employee_password.setText("");
-       views.cmb_rol.setSelectedIndex(0);
-       
+        views.txt_employee_id.setText("");
+        views.txt_employee_id.setEditable(true);
+        views.txt_employee_fullname.setText("");
+        views.txt_employee_username.setText("");
+        views.txt_employee_address.setText("");
+        views.txt_employee_telephone.setText("");
+        views.txt_employee_email.setText("");
+        views.txt_employee_password.setText("");
+        views.txt_employee_password.setEnabled(true);
+        views.cmb_rol.setSelectedIndex(0);
+
     }
+
     public void cleanTable() {
         for (int i = 0; i < model.getRowCount(); i++) {
             model.removeRow(i);

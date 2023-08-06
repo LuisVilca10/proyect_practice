@@ -1,5 +1,6 @@
 package Models;
 
+import Views.SystemView;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,10 +16,11 @@ public class SuppliersDao {
     Connection conn;
     PreparedStatement pst;
     ResultSet rs;
+    SystemView views;
 
     public boolean registerSuppliersQuery(Suppliers supplier) {
 
-        String query = " INSERTO INTO suppliers ( name, description, telephone, address, email, city, created, update )"
+        String query = " INSERT INTO suppliers ( name, description, telephone, address, email, city, created, updated )"
                 + " VALUES (?,?,?,?,?,?,?,?) ";
         Timestamp datetime = new Timestamp(new java.util.Date().getTime());
         try {
@@ -37,14 +39,15 @@ public class SuppliersDao {
             return true;
 
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "error al registrar proveedor ");
+            System.err.println("el error : " + e.getMessage());
+            JOptionPane.showMessageDialog(views, "error al registrar proveedor " + e.getMessage());
             return false;
         }
     }
 
     public List listSuppliersQuery(String value) {
         List<Suppliers> list_supplier = new ArrayList();
-        String query = "SELECT * FROM suppliers ORDER BY rol ASC";
+        String query = "SELECT * FROM suppliers ORDER BY id ASC";
         String query_search_supplier = "SELECT * FROM suppliers WHERE name LIKE '%" + value + "%'";
 
         try {
@@ -76,7 +79,7 @@ public class SuppliersDao {
     }
 
     public boolean updateSupplierQuery(Suppliers supplier) {
-        String query = "UPDATE suppliers SET name = ?,  description = ?, telephone = ?,address=?, email = ?, city = ?, update = ?"
+        String query = "UPDATE suppliers SET name = ?,  description = ?, telephone = ?,address=?, email = ?, city = ?, updated = ?"
                 + " WHERE id = ?";
 
         Timestamp datetime = new Timestamp(new java.util.Date().getTime());

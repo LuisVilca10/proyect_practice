@@ -18,7 +18,7 @@ public class CategoriesDao {
 
     public boolean registerCategoriesQuery(Categories category) {
 
-        String query = " INSERTO INTO categories ( name, created, update )"
+        String query = " INSERT INTO categories ( name, created, updated )"
                 + " VALUES (?,?,?) ";
         Timestamp datetime = new Timestamp(new java.util.Date().getTime());
         try {
@@ -32,6 +32,7 @@ public class CategoriesDao {
             return true;
 
         } catch (SQLException e) {
+            System.err.println("el error es: "+e.getMessage());
             JOptionPane.showMessageDialog(null, "error al registrar categoria ");
             return false;
         }
@@ -39,7 +40,7 @@ public class CategoriesDao {
 
     public List listCategoriesQuery(String value) {
         List<Categories> list_category = new ArrayList();
-        String query = "SELECT * FROM categories ORDER BY rol ASC";
+        String query = "SELECT * FROM categories ORDER BY id ASC";
         String query_search_category = "SELECT * FROM categories WHERE name LIKE '%" + value + "%'";
 
         try {

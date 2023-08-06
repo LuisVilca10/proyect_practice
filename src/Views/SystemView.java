@@ -4,30 +4,57 @@
  */
 package Views;
 
+import Controllers.*;
 import Controllers.EmployeesController;
 import Controllers.SettingsController;
 import Models.*;
+import java.util.function.Supplier;
 
 /**
  *
  * @author Luis
  */
 public class SystemView extends javax.swing.JFrame {
+
     Employees em = new Employees();
     EmployeesDao emdao = new EmployeesDao();
+    //clientes
+    Customers cus = new Customers();
+    CustomersDao cusdao = new CustomersDao();
+    //proveedores
+    Suppliers sup = new Suppliers();
+    SuppliersDao supdao = new SuppliersDao();
+    //categorias
+    Categories cat = new Categories();
+    CategoriesDao catdao = new CategoriesDao();
+
     /**
      * Creates new form SystemView
      */
     public SystemView() {
         initComponents();
-        setSize(1208,680);
-        setResizable(true);
+        setSize(1208, 680);
+
         setTitle("Panel de Administrador");
-        setLocationRelativeTo( null);
+        setLocationRelativeTo(null);
+        titleInterface();
         SettingsController setting = new SettingsController(this);
         this.repaint();
         EmployeesController em_Account = new EmployeesController(em, emdao, this);
         em_Account.listAllEmployees();
+        CustomersController cus_Account = new CustomersController(cus, cusdao, this);
+        cus_Account.listAllCustomers();
+        SuppliersController sup_Account = new SuppliersController(sup, supdao, this);
+        sup_Account.listAllSupliers();
+        CategoriesController cat_Account = new CategoriesController(cat, catdao, this);
+        cat_Account.listAllCategories();
+    }
+
+    public String titleInterface() {
+        setTitle("Panel - " + EmployeesDao.rol_user);
+        label_employee.setText(EmployeesDao.full_name_user);
+        label_name_rol.setText(EmployeesDao.rol_user);
+        return EmployeesDao.rol_user.trim();
     }
 
     /**
@@ -63,6 +90,8 @@ public class SystemView extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         btn_photo = new javax.swing.JButton();
         btn_logout = new javax.swing.JButton();
+        label_employee = new javax.swing.JLabel();
+        label_name_rol = new javax.swing.JLabel();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel5 = new javax.swing.JPanel();
         jPanel12 = new javax.swing.JPanel();
@@ -177,7 +206,7 @@ public class SystemView extends javax.swing.JFrame {
         btn_delete_supplier = new javax.swing.JButton();
         btn_cancel_supplier = new javax.swing.JButton();
         jLabel40 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        txt_search_supplier = new javax.swing.JTextField();
         jScrollPane5 = new javax.swing.JScrollPane();
         suppliers_table = new javax.swing.JTable();
         jPanel7 = new javax.swing.JPanel();
@@ -426,7 +455,12 @@ public class SystemView extends javax.swing.JFrame {
         jPanel3.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 0, 340, 100));
 
         btn_photo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/usuario.png"))); // NOI18N
-        jPanel3.add(btn_photo, new org.netbeans.lib.awtextra.AbsoluteConstraints(760, 20, 80, 65));
+        btn_photo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_photoActionPerformed(evt);
+            }
+        });
+        jPanel3.add(btn_photo, new org.netbeans.lib.awtextra.AbsoluteConstraints(830, 10, 90, 80));
 
         btn_logout.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         btn_logout.setText("Salir");
@@ -435,7 +469,13 @@ public class SystemView extends javax.swing.JFrame {
                 btn_logoutActionPerformed(evt);
             }
         });
-        jPanel3.add(btn_logout, new org.netbeans.lib.awtextra.AbsoluteConstraints(890, 35, -1, 30));
+        jPanel3.add(btn_logout, new org.netbeans.lib.awtextra.AbsoluteConstraints(930, 30, -1, 30));
+
+        label_employee.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jPanel3.add(label_employee, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 20, 110, 30));
+
+        label_name_rol.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jPanel3.add(label_name_rol, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 50, 110, 30));
 
         getContentPane().add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 0, 1010, 100));
 
@@ -765,7 +805,7 @@ public class SystemView extends javax.swing.JFrame {
         jPanel9.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel18.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jLabel18.setText("ID:");
+        jLabel18.setText("DNI:");
 
         jLabel19.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel19.setText("Nombre:");
@@ -1186,7 +1226,7 @@ public class SystemView extends javax.swing.JFrame {
         jLabel40.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel40.setText("Buscar:");
         jPanel4.add(jLabel40, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 310, -1, 30));
-        jPanel4.add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 310, 160, 30));
+        jPanel4.add(txt_search_supplier, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 310, 160, 30));
 
         suppliers_table.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -1515,6 +1555,10 @@ public class SystemView extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btn_logoutActionPerformed
 
+    private void btn_photoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_photoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btn_photoActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -1546,6 +1590,7 @@ public class SystemView extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new SystemView().setVisible(true);
+
             }
         });
     }
@@ -1677,8 +1722,9 @@ public class SystemView extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JScrollPane jScrollPane7;
-    private javax.swing.JTabbedPane jTabbedPane1;
-    public javax.swing.JTextField jTextField1;
+    public javax.swing.JTabbedPane jTabbedPane1;
+    public javax.swing.JLabel label_employee;
+    public javax.swing.JLabel label_name_rol;
     public javax.swing.JTable products_table;
     public javax.swing.JTable purchases_table;
     public javax.swing.JTable suppliers_table;
@@ -1687,10 +1733,10 @@ public class SystemView extends javax.swing.JFrame {
     public javax.swing.JTextField txt_category_id;
     public javax.swing.JTextField txt_category_name;
     public javax.swing.JTextField txt_customer_adress;
-    private javax.swing.JTextField txt_customer_email;
+    public javax.swing.JTextField txt_customer_email;
     public javax.swing.JTextField txt_customer_fullname;
     public javax.swing.JTextField txt_customer_id;
-    private javax.swing.JTextField txt_customer_telephone;
+    public javax.swing.JTextField txt_customer_telephone;
     public javax.swing.JTextField txt_email_profile;
     public javax.swing.JTextField txt_employee_address;
     public javax.swing.JTextField txt_employee_email;
@@ -1720,6 +1766,7 @@ public class SystemView extends javax.swing.JFrame {
     public javax.swing.JTextField txt_search_customer;
     public javax.swing.JTextField txt_search_employee;
     public javax.swing.JTextField txt_search_product;
+    public javax.swing.JTextField txt_search_supplier;
     public javax.swing.JTextField txt_supplier_address;
     public javax.swing.JTextField txt_supplier_description;
     public javax.swing.JTextField txt_supplier_email;

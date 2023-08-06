@@ -3,16 +3,12 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/D:/edutin-personal/Practica/src/Controllers/SettingsController.java</file>
-            <file>file:/D:/edutin-personal/Practica/src/main/main.java</file>
+            <file>file:/D:/edutin-personal/Practica/src/Models/SuppliersDao.java</file>
+            <file>file:/D:/edutin-personal/Practica/src/Models/CategoriesDao.java</file>
+            <file>file:/D:/edutin-personal/Practica/src/Controllers/CategoriesController.java</file>
             <file>file:/D:/edutin-personal/Practica/src/Views/LoginView.java</file>
-            <file>file:/D:/edutin-personal/Practica/src/Models/Products.java</file>
-            <file>file:/D:/edutin-personal/Practica/src/Models/ConnectionMySQL.java</file>
             <file>file:/D:/edutin-personal/Practica/src/Controllers/EmployeesController.java</file>
-            <file>file:/D:/edutin-personal/Practica/src/Models/EmployeesDao.java</file>
             <file>file:/D:/edutin-personal/Practica/src/Views/SystemView.java</file>
-            <file>file:/D:/edutin-personal/Practica/src/Models/Employees.java</file>
-            <file>file:/D:/edutin-personal/Practica/src/Controllers/LoginController.java</file>
         </group>
     </open-files>
 </project-private>
