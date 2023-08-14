@@ -67,7 +67,7 @@ public class CategoriesDao {
     }
 
     public boolean updateCategoryQuery(Categories category) {
-        String query = "UPDATE categories SET name = ?, update = ?"
+        String query = "UPDATE categories SET name = ?, updated = ?"
                 + " WHERE id = ?";
 
         Timestamp datetime = new Timestamp(new java.util.Date().getTime());
@@ -76,10 +76,11 @@ public class CategoriesDao {
             pst = conn.prepareStatement(query);
             pst.setString(1, category.getName());
             pst.setTimestamp(2, datetime);
-            pst.setInt(4, category.getId());
+            pst.setInt(3, category.getId());
             pst.execute();
             return true;
         } catch (SQLException e) {
+            System.err.println("el error es :" +e.getMessage());
             JOptionPane.showMessageDialog(null, "error al actualizar la categoria" + e);
             return false;
         }

@@ -36,6 +36,7 @@ public class SuppliersController implements ActionListener, MouseListener, KeyLi
         this.views.suppliers_table.addMouseListener(this);
         this.views.jPanelSuppliers.addMouseListener(this);
         this.views.txt_search_supplier.addKeyListener(this);
+        getSupplierName();
     }
 
     @Override
@@ -217,4 +218,15 @@ public class SuppliersController implements ActionListener, MouseListener, KeyLi
 
         }
     }
+
+    public void getSupplierName() {
+        List<Suppliers> list = supdao.listSuppliersQuery(views.txt_search_supplier.getText());
+        for (int i = 0; i < list.size(); i++) {
+            int id = list.get(i).getId();
+            String name = list.get(i).getName();
+            DynamicCombobox dynamicItem = new DynamicCombobox(id, name);
+            views.cmb_purchase_supplier.addItem(name);
+        }
+    }
+
 }

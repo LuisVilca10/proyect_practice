@@ -18,7 +18,7 @@ public class ProductsDao {
 
     public boolean registerProductsQuery(Products product) {
 
-        String query = " INSERTO INTO products ( code, name, description, unit_price, created, update, category_id )"
+        String query = " INSERT INTO products ( code, name, description, unit_price, created, updated, category_id )"
                 + " VALUES (?,?,?,?,?,?,?) ";
         Timestamp datetime = new Timestamp(new java.util.Date().getTime());
         try {
@@ -36,26 +36,29 @@ public class ProductsDao {
             return true;
 
         } catch (SQLException e) {
+            System.err.println("el error es: " + e.getMessage());
             JOptionPane.showMessageDialog(null, "error al registrar producto ");
             return false;
         }
     }
 
-    public List listProductsQuery(String value) {
-        List<Products> list_product = new ArrayList();
-        String query = "SELECT pro.*, ca.name AS category_name FROM products pro, categories ca WHERE pro.category_id = ca.id";
-        String query_search_product = "SELECT pro.*, ca.name AS category_name FROM products pro, categories ca INNER JOIN categories ca"
-                + "ON pro.category_id = ca.id WHERE pro.name LIKE '%" + value + "%'";
+    public List<Products> listProductsQuery(String value) {
+        List<Products> list_product = new ArrayList<>();
+        String query = "SELECT pro.*, ca.name AS category_name FROM products pro "
+                + "INNER JOIN categories ca ON pro.category_id = ca.id";
+        String query_search_product = "SELECT pro.*, ca.name AS category_name FROM products pro "
+                + "INNER JOIN categories ca ON pro.category_id = ca.id "
+                + "WHERE pro.name LIKE '%" + value + "%'";
 
         try {
             conn = cn.getConnection();
             if (value.equalsIgnoreCase("")) {
                 pst = conn.prepareStatement(query);
-                rs = pst.executeQuery();
             } else {
                 pst = conn.prepareStatement(query_search_product);
-                rs = pst.executeQuery();
             }
+
+            rs = pst.executeQuery();
 
             while (rs.next()) {
                 Products em = new Products();
@@ -71,12 +74,15 @@ public class ProductsDao {
 
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, e.toString());
+        } finally {
+            // Cierra recursos (pst, rs, conn) apropiadamente
+            // ...
         }
         return list_product;
     }
 
     public boolean updateProductQuery(Products product) {
-        String query = "UPDATE products SET code = ?, name = ?, description = ?, unit_price = ?, created = ?, update = ?, category_id = ?"
+        String query = "UPDATE products SET code = ?, name = ?, description = ?, unit_price = ?, `updated` = ?, category_id = ?"
                 + " WHERE id = ?";
 
         Timestamp datetime = new Timestamp(new java.util.Date().getTime());
@@ -87,7 +93,7 @@ public class ProductsDao {
             pst.setString(2, product.getName());
             pst.setString(3, product.getDescription());
             pst.setDouble(4, product.getUnit_price());
-            pst.setTimestamp(5, (datetime));
+            pst.setTimestamp(5, datetime);
             pst.setInt(6, product.getCategory_id());
             pst.setInt(7, product.getId());
             pst.execute();
@@ -113,7 +119,7 @@ public class ProductsDao {
     }
 
     public Products searchProduct(int id) {
-        String query = "SELECT pro.*, ca.name AS category_name FROM products pro, categories ca "
+        String query = "SELECT pro.*, ca.name AS category_name FROM products pro "
                 + "INNER JOIN categories ca ON pro.category_id = ca.id WHERE pro.id = ?";
         Products pr = new Products();
         try {
@@ -132,6 +138,7 @@ public class ProductsDao {
                 pr.setCategory_name(rs.getString("category_name"));
             }
         } catch (SQLException e) {
+            System.err.println("el error: " + e.getMessage());
             JOptionPane.showMessageDialog(null, e.getMessage());
         }
         return pr;
